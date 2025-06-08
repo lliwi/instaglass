@@ -1,0 +1,59 @@
+{% extends '/auth/base-auth.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+{% include 'auth/base-header.html' %}
+
+<div class="center">
+    <h1>Users</h1>
+    <div class="user-div">
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Username</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            {% for user in users %}
+            <tr>
+                <td>{{ user['name'] }}</td>
+                <td>{{ user['surname'] }}</td>
+                <td>{{ user['user'] }}</td>
+                <td><a class="button" href="{{ url_for('auth.delete', id=user['id']) }}">delete</a>
+                </td>
+            </tr>
+            {% if not loop.last%}
+            {%endif%}
+            {%endfor%}
+        </table>
+    </div>
+</div>
+
+<div class="center">
+    <h1>New User</h1>
+    <div class="registry">
+        <form method="post">
+            <label for="name">Name</label>
+            <input name="name" id="name" required />
+
+            <label for="surname">Surname</label>
+            <input name="surname" id="surname" required />
+
+            <label for="username">Username</label>
+            <input name="username" id="username" required />
+
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required />
+
+            <input class="button" type="submit" value="add" />
+        </form>
+    </div>
+</div>
+<p class="error">{{ error }}</p>
+<div class="center-right"></div>
+{% endblock %}

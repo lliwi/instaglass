@@ -1,0 +1,6 @@
+[{
+ 	"schedule":"@every 5m",
+ 	"command":"wget -qO- http://instaglass:8000/cron"
+ }
+ 	
+ ]

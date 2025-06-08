@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<title>{% block title%}{% endblock %} Instaglass </title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    html {
+        background-color: #ffffff;
+    }
+</style>
+
+<body>
+    <section>
+        {% block content %}{% endblock %}
+    </section>
+    <div class="footer">
+        <div class="made-with">
+            <div class="row">
+                <p>Powered by lliwi</p>
+            </div>
+        </div>
+</body>

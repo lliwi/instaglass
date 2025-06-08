@@ -1,0 +1,43 @@
+services:
+  instaglass:
+    ports:
+      - "8000:8000"
+    image: lliwi/instaglass
+    environment:
+      - FLASK_DATABASE_HOST=db
+      - FLASK_DATABASE_USER=root
+      - FLASK_DATABASE_PASSWORD=example
+      - FLASK_DATABASE=instaglass
+      - SECRET_KEY=yourseccret
+      - APIFY_KEY=XXX
+      - OPENAI_API_KEY=XXX
+    restart: always
+    volumes:
+      - ./app:/code/app
+      
+  db:
+    image: mysql
+    #command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=example
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db_data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  crontab:
+    image: willfarrell/crontab
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./crontab/config/:/opt/crontab
+      - ./crontab/logs/:/var/log/crontab
+
+

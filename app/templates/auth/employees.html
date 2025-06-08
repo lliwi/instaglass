@@ -1,0 +1,75 @@
+{% extends '/auth/base-auth.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+{% include 'auth/base-header.html' %}
+
+<div class="center">
+    <h1>Employee Management</h1>
+    <div class="user-div">
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Withdrawal date</th>
+                    <th>Observations</th>
+                    <th>Instagram account</th>
+                    <th>Facebook account</th>
+                    <th>Active</th>
+                </tr>
+            </thead>
+            {% for employee in employees %}
+            <tr>
+                <td>{{ employee['name'] }}</td>
+                <td>{{ employee['surname'] }}</td>
+                <td>{{ employee['date'] }}</td>
+                <td>{{ employee['observation'] }}</td>
+                <td>{{ employee['instagram_account'] }}</td>
+                <td>{{ employee['facebook_account'] }}</td>
+                <td>{{ 'On' if employee['active'] else 'Off' }}</td>
+                <td><a class="button" href="{{ url_for('auth.employee_delete', id=employee['id']) }}">delete</a>
+                </td>
+            </tr>
+            {% if not loop.last%}
+            {%endif%}
+            {%endfor%}
+        </table>
+    </div>
+</div>
+
+<div class="center">
+    <h1>New User</h1>
+    <div class="registry">
+        <form method="post">
+            <label for="name">Name</label>
+            <input name="name" id="name" required />
+
+            <label for="surname">Surname</label>
+            <input name="surname" id="surname" required />
+
+            <label for="date">Withdrawal date</label>
+            <input type="date" name="date" id="date" required />
+
+            <label for="observation">Observation</label>
+            <textarea name="observation" id="observation"></textarea>
+
+            <label for="instagram_account">Instagram Account</label>
+            <input name="instagram_account" id="instagram_account" />
+
+            <label for="facebook_account">Facebook Account</label>
+            <input name="facebook_account" id="facebook_account" />
+
+            <label for="active">Active</label>
+            <input type="checkbox" name="active" id="active" />
+
+            <input class="button" type="submit" value="add" />
+        </form>
+    </div>
+</div>
+<p class="error">{{ error }}</p>
+<div class="center-right"></div>
+{% endblock %}

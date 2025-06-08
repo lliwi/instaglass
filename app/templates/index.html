@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title%}{% endblock %}
+
+{% block content %}
+<script>
+    var timer = setTimeout(function () {
+        window.location = '/'
+    }, 3600000);
+</script>
+<header>
+    <div class="dropdown">
+        <span>|Menu|</span>
+        <div class="dropdown-content">
+            <a class="button " href="/auth/login"> <img src="{{ url_for('static', filename='images/admin.png') }}"
+                    width="20px" /></a>
+        </div>
+    </div>
+    <div class="logo">
+        <h3>Instaglass</h3>
+        <img src="{{ url_for('static', filename='images/logo.png') }}" height="30px" />
+    </div>
+</header>
+
+{% endblock %}

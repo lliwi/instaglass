@@ -1,0 +1,15 @@
+{% extends '/auth/base-auth.html' %}
+
+
+{% block content %}
+
+{% include 'auth/base-header.html' %}
+
+
+<div class="center">
+   <img src="{{ url_for('static', filename='images/logo-vw.png') }}" width="800px" />
+
+   <a class= "export" href="/auth/export"><img src="{{ url_for('static', filename='images/export.png') }}" width="100px" /></a>
+</div>
+
+{% endblock %}
