@@ -93,7 +93,7 @@ def cron():
         }
 
         run = client.actor("apify/instagram-scraper").call(run_input=run_input)
-        count = 0
+
         try:
             for item in client.dataset(run["defaultDatasetId"]).iterate_items():
                 item['caption'] = item['caption'].replace('/n', '')
@@ -104,7 +104,7 @@ def cron():
                 item['latestComments'] = ", ".join(item['latestComments']) if item['latestComments'] else ''
                 item['images'] = ", ".join(item['images']) if item['images'] else ''
                 item['childPosts'] = ", ".join(item['childPosts']) if item['childPosts'] else ''
-                count += 1
+                #count += 1
 
                 try:
                     add_post = ('insert into instagram' 
@@ -127,26 +127,24 @@ def cron():
                     print(f"Error updating tasks for {employee['Id']} - {employee['instagram_account']}: {e}")
         except Exception as e:
             print(f"No new posts found for {employee['Id']} - {employee['instagram_account']}: {e}")
-        if count > 0:
 
-        
-            # Get posts description and score from OpenAI
-            c.execute("select employees.Id, employees.observation, instagram.DisplayUrl, instagram.ShortCode from employees JOIN instagram ON instagram.employee_id = employees.Id WHERE employees.active = 'on';")
-            posts = c.fetchall()
+        # Get posts description and score from OpenAI
+        c.execute("select employees.Id, employees.observation, instagram.DisplayUrl, instagram.ShortCode from employees JOIN instagram ON instagram.employee_id = employees.Id WHERE employees.active = 'on' AND instagram.ShortCode not in (select ShortCode from posts);")
+        posts = c.fetchall()
 
-            for post in posts:
-                try:
-                    result = openai_cli(post['DisplayUrl'], post['observation'])
-                    #print(result.output_text)
-                    valoracion = re.search(r"Valoración: (\d+)", result.output_text)
-                    if valoracion:
-                        score = valoracion.group(1)
-                    else:
-                        score = None
+        for post in posts:
+            try:
+                result = openai_cli(post['DisplayUrl'], post['observation'])
 
-                    c.execute('insert into posts (employee_id, ShortCode, Description, Score) values (%s, %s, %s, %s);', (post['Id'], post['ShortCode'], result.output_text, score))
-                    db.commit()
-                except Exception as e:
-                    print(f"Error processing post {post['ShortCode']}: {e}")
+                valoracion = re.search(r"Valoración: (\d+)", result.output_text)
+                if valoracion:
+                    score = valoracion.group(1)
+                else:
+                    score = None
+
+                c.execute('insert into posts (employee_id, ShortCode, Description, Score) values (%s, %s, %s, %s);', (post['Id'], post['ShortCode'], result.output_text, score))
+                db.commit()
+            except Exception as e:
+                print(f"Error processing post {post['ShortCode']}: {e}")
 
     return 'Cron job completed successfully', 200
