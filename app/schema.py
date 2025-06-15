@@ -33,7 +33,7 @@ instructions = [
             InputUrl TEXT,
             Url TEXT,
             Type TEXT,
-            ShortCode TEXT,
+            ShortCode VARCHAR(11) NOT NULL,
             Caption TEXT,
             Hashtags TEXT,
             Mentions TEXT,
@@ -51,17 +51,20 @@ instructions = [
             OwnerUsername TEXT,
             OwnerId INT,
             creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`ShortCode`)
             FOREIGN KEY (employee_id) REFERENCES employees (id)
+            
         );
     """,
     'DROP TABLE IF EXISTS posts;',
     """
         CREATE TABLE posts (
             employee_id INT NOT NULL,
-            ShortCode TEXT NOT NULL,
+            ShortCode VARCHAR(11) NOT NULL,
             Description TEXT,
             Score INT,
-            creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`ShortCode`)
         );
     """,
     'DROP TABLE IF EXISTS tasks;',

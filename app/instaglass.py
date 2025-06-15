@@ -106,21 +106,25 @@ def cron():
                 item['childPosts'] = ", ".join(item['childPosts']) if item['childPosts'] else ''
                 count += 1
 
-                #hashtags, mentions, lastComments, images, childPosts
-                #print(item)
-                add_post = ('insert into instagram' 
-                        '(employee_id, InputUrl, Type, ShortCode, Caption, Hashtags, Mentions, CommentsCount, FirstComment, LatestComments, DisplayUrl, Images, AltText, LikesCount, Timestamp, OwnerFullName, OwnerUsername)'
-                        ' values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)') 
-                data_post = (employee['Id'], item['inputUrl'], item['type'],  item['shortCode'], item['caption'], item['hashtags'], item['mentions'], item['commentsCount'], item['firstComment'], item['latestComments'], item['displayUrl'], item['images'], item['alt'], item['likesCount'],  item['timestamp'], item['ownerFullName'], item['ownerUsername'])
-                c.execute(add_post, data_post)
-                db.commit()
+                try:
+                    add_post = ('insert into instagram' 
+                            '(employee_id, InputUrl, Type, ShortCode, Caption, Hashtags, Mentions, CommentsCount, FirstComment, LatestComments, DisplayUrl, Images, AltText, LikesCount, Timestamp, OwnerFullName, OwnerUsername)'
+                            ' values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)') 
+                    data_post = (employee['Id'], item['inputUrl'], item['type'],  item['shortCode'], item['caption'], item['hashtags'], item['mentions'], item['commentsCount'], item['firstComment'], item['latestComments'], item['displayUrl'], item['images'], item['alt'], item['likesCount'],  item['timestamp'], item['ownerFullName'], item['ownerUsername'])
+                    c.execute(add_post, data_post)
+                    db.commit()
+                except Exception as e:
+                    print(f"Error inserting post for {employee['Id']} - {employee['instagram_account']}: {e}")
 
-                c.execute('select employee_id from tasks where employee_id = %s', (employee['Id'],))
-                if c.fetchone() is None:
-                    c.execute('insert into tasks (employee_id, instagram_last_post) values (%s, %s);', (employee['Id'], item['timestamp']))
-                else:
-                    c.execute('update tasks set instagram_last_post = %s where employee_id = %s;', (item['timestamp'], employee['Id']))
-                db.commit()
+                try:
+                    c.execute('select employee_id from tasks where employee_id = %s', (employee['Id'],))
+                    if c.fetchone() is None:
+                        c.execute('insert into tasks (employee_id, instagram_last_post) values (%s, %s);', (employee['Id'], item['timestamp']))
+                    else:
+                        c.execute('update tasks set instagram_last_post = %s where employee_id = %s;', (item['timestamp'], employee['Id']))
+                    db.commit()
+                except Exception as e:
+                    print(f"Error updating tasks for {employee['Id']} - {employee['instagram_account']}: {e}")
         except Exception as e:
             print(f"No new posts found for {employee['Id']} - {employee['instagram_account']}: {e}")
         if count > 0:
