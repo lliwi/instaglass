@@ -51,7 +51,7 @@ instructions = [
             OwnerUsername TEXT,
             OwnerId INT,
             creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (`ShortCode`)
+            PRIMARY KEY (`ShortCode`),
             FOREIGN KEY (employee_id) REFERENCES employees (id)
             
         );
